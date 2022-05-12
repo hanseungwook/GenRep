@@ -129,7 +129,7 @@ def sample(opt):
             
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser("Sample from stylegan2 cars")
+    parser = argparse.ArgumentParser("Sample from stylegan2 (new)")
     parser.add_argument('--out_dir', default='/disk_d/han/data/', type=str)
     parser.add_argument('--data_dir', default='/disk_d/han/data/', type=str)
     parser.add_argument('--checkpoint_path', default='/', type=str)
@@ -139,7 +139,7 @@ if __name__ == '__main__':
     parser.add_argument('--imformat', default='png', type=str)
     parser.add_argument('--num_imgs', default=1300, type=int, help='num imgs per class')
     parser.add_argument('--start_seed', default=0, type=int)
-    parser.add_argument('--dataset_type', default='cifar100', type=int, choices=['cifar10', 'cifar100', 'tinyimagenet'],help='choices: 100, 893, or 1000, equivalent to number of images in image100, cars, or imagenet1000')
+    parser.add_argument('--dataset_type', default='cifar100', type=float, choices=['cifar10', 'cifar100', 'tinyimagenet'],help='choices: 100, 893, or 1000, equivalent to number of images in image100, cars, or imagenet1000')
     parser.add_argument('--num_neighbors', default=1, type=int, help='num samples per anchor')
     parser.add_argument('--std', default=0.20, type=float, help='std for gaussian in z space')
 
