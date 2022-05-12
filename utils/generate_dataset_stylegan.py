@@ -85,7 +85,7 @@ def sample(opt):
 
     batch_size = opt.batch_size
     if opt.dataset_type == 'cifar100':
-        ds = torchvision.datasets.CIFAR100('./', train=True, download=True)
+        ds = torchvision.datasets.CIFAR100(opt.data_dir, train=True, download=True)
         class_index = ds.class_to_idx
         del ds
     
@@ -131,7 +131,8 @@ def sample(opt):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser("Sample from stylegan2 cars")
-    parser.add_argument('--out_dir', default='/data/vision/phillipi/ganclr/datasets', type=str)
+    parser.add_argument('--out_dir', default='/disk_d/han/data/', type=str)
+    parser.add_argument('--data_dir', default='/disk_d/han/data/', type=str)
     parser.add_argument('--checkpoint_path', default='/', type=str)
     parser.add_argument('--partition', default='train', type=str)
     parser.add_argument('--truncation', default=0.9, type=float)
