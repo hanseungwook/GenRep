@@ -123,7 +123,7 @@ def sample(opt):
                         im_name = 'seed%04d_sample%05d_1.0_%d.%s' % (seed, batch_start+i, ii, opt.imformat)
 
                     im = renormalize.as_image(im)
-                    im = Image.fromarray(im)
+                    im = Image.fromarray(np.array(im))
                     im.save(os.path.join(class_dir_name, im_name))
                     z_dict[im_name] = [noise_vector[batch_start+i].cpu().numpy(), idx]
         with open(os.path.join(class_dir_name, 'z_dataset.pkl'), 'wb') as fid:
