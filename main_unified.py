@@ -171,9 +171,12 @@ def set_loader(opt):
     elif opt.dataset == 'cifar100':
         mean = (0.5071, 0.4867, 0.4408)
         std = (0.2675, 0.2565, 0.2761)
-    elif opt.dataset == 'gan' or opt.dataset == 'imagenet100' or opt.dataset == 'imagenet100K' or opt.dataset == 'imagenet':
+    elif opt.dataset == 'imagenet100' or opt.dataset == 'imagenet100K' or opt.dataset == 'imagenet':
         mean = (0.485, 0.456, 0.406)
         std = (0.229, 0.224, 0.225)
+    elif opt.dataset == 'gan':
+        mean = (0.5071, 0.4867, 0.4408)
+        std = (0.2675, 0.2565, 0.2761)
     else:
         raise ValueError('dataset not supported: {}'.format(opt.dataset))
     normalize = transforms.Normalize(mean=mean, std=std)
@@ -182,13 +185,13 @@ def set_loader(opt):
     
     if opt.removeimtf:
         train_transform = transforms.Compose([
-            transforms.CenterCrop(size=int(opt.img_size*0.875)),
+            transforms.CenterCrop(size=int(opt.img_size)),
             transforms.ToTensor(),
             normalize,
         ])
     else:
         train_transform = transforms.Compose([
-            transforms.RandomResizedCrop(size=int(opt.img_size*0.875), scale=(0.2, 1.)),
+            transforms.RandomResizedCrop(size=int(opt.img_size), scale=(0.2, 1.)),
             transforms.RandomHorizontalFlip(),
             transforms.RandomApply([
                 transforms.ColorJitter(0.4, 0.4, 0.4, 0.1)
@@ -230,11 +233,11 @@ def set_loader(opt):
 
 def set_model(opt):
     if opt.encoding_type == 'contrastive':
-        model = SupConResNet(name=opt.model, img_size=int(opt.img_size*0.875))
+        model = SupConResNet(name=opt.model, img_size=int(opt.img_size))
         criterion = SupConLoss(temperature=opt.temp)
 
     elif opt.encoding_type == 'crossentropy':
-        model = SupCEResNet(name=opt.model, num_classes=opt.n_cls, img_size=int(opt.img_size*0.875))
+        model = SupCEResNet(name=opt.model, num_classes=opt.n_cls, img_size=int(opt.img_size))
         criterion = torch.nn.CrossEntropyLoss()
 
     elif opt.encoding_type == 'autoencoding':
@@ -311,7 +314,7 @@ def train(train_loader, model, criterion, optimizer, epoch, opt, grad_update, cl
             images = torch.cat([images[0].unsqueeze(1), images[1].unsqueeze(1)],
                                dim=1)
 
-            images = images.view(-1, 3, int(opt.img_size*0.875), int(opt.img_size*0.875)).cuda(non_blocking=True)
+            images = images.view(-1, 3, int(opt.img_size), int(opt.img_size)).cuda(non_blocking=True)
             # print('3) images shape', images.shape)
 
         labels_np = [x for x in labels.numpy()]
