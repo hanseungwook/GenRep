@@ -11,7 +11,6 @@ import oyaml as yaml
 import torch
 import torchvision
 from sgan.stylegan2_utils import renormalize, nethook
-from sgan.stylegan2_utils.stylegan2 import load_seq_stylegan
 from stylegan_model import Generator
 from PIL import Image
 import numpy as np
