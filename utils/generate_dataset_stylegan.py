@@ -35,29 +35,29 @@ def truncated_noise_sample_neighbors(batch_size=1, dim_z=512, truncation=1., see
     """
     list_results = []
 
-    if truncation is not None:
-        state = None if seed is None else np.random.RandomState(seed)
+    # if truncation is not None:
+    #     state = None if seed is None else np.random.RandomState(seed)
 
-        zs = truncation * torch.from_numpy(truncnorm.rvs(-2, 2, size=(batch_size, dim_z), random_state=state).astype(np.float32)).to(device)
-        list_results.append(zs) # these are anchors
+    #     zs = truncation * torch.from_numpy(truncnorm.rvs(-2, 2, size=(batch_size, dim_z), random_state=state).astype(np.float32)).to(device)
+    #     list_results.append(zs) # these are anchors
 
-        for i in range(num_neighbors):
-            state_neighbors = None if seed is None else np.random.RandomState(seed+1000+i)
-            values_neighbors = truncation * torch.from_numpy(truncnorm.rvs(-2, 2, size=(batch_size, dim_z),
-                                                          scale=scale, random_state=state_neighbors).astype(np.float32)).to(device)
+    #     for i in range(num_neighbors):
+    #         state_neighbors = None if seed is None else np.random.RandomState(seed+1000+i)
+    #         values_neighbors = truncation * torch.from_numpy(truncnorm.rvs(-2, 2, size=(batch_size, dim_z),
+    #                                                       scale=scale, random_state=state_neighbors).astype(np.float32)).to(device)
 
-            list_results.append(zs + values_neighbors)    
-    else:
-        np.random.seed(seed)
-        zs = torch.tensor(np.random.normal(0.0, 1.0, [batch_size, dim_z]), dtype=torch.float32, requires_grad=False).to(device)
-        list_results.append(zs) # these are anchors
+    #         list_results.append(zs + values_neighbors)    
+    # else:
+    np.random.seed(seed)
+    zs = torch.tensor(np.random.normal(0.0, 1.0, [batch_size, dim_z]), dtype=torch.float32, requires_grad=False).to(device)
+    list_results.append(zs) # these are anchors
 
-        for i in range(num_neighbors):
-            np.random.seed(seed+1000+i)
-            values_neighbors = torch.tensor(np.random.normal(0.0, scale, [batch_size, dim_z]), dtype=torch.float32,
-                                            requires_grad=False).to(device)
+    for i in range(num_neighbors):
+        np.random.seed(seed+1000+i)
+        values_neighbors = torch.tensor(np.random.normal(0.0, scale, [batch_size, dim_z]), dtype=torch.float32,
+                                        requires_grad=False).to(device)
 
-            list_results.append(zs + values_neighbors)
+        list_results.append(zs + values_neighbors)
 
     return list_results
     
@@ -112,7 +112,9 @@ def sample(opt):
             for batch_start in range(0, nimg, batch_size):
                 s = slice(batch_start, min(nimg, batch_start + batch_size))
                 with torch.no_grad():
-                    ims = gan_model(noise_vector[s])
+                    ims, _ = gan_model([noise_vector[s]],
+                                    input_is_latent=False,
+                                    randomize_noise=True)
     
                 for i, im in enumerate(ims):
                     if ii == 0: #anchors
