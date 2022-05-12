@@ -1,7 +1,7 @@
 #!/bin/bash
 
 python3 generate_dataset_stylegan.py \
-    --out_dir /disk_d/han/data/ \
+    --out_dir /disk_d/han/data/cifar100_generated/ \
     --checkpoint_path /disk_d/han/data/stylegan_checkpoints/220000.pt \
     --partition train \
     --truncation 2.0 \
