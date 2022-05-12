@@ -96,7 +96,7 @@ def sample(opt):
         if os.path.isdir(class_dir_name):
             continue
         os.makedirs(class_dir_name, exist_ok=True)
-        idx = int(key)
+        idx = int(class_index[key])
         z_dict = dict()
                 
         print('Generating images for class {}, with number of images to be {}'.format(idx, nimg))
