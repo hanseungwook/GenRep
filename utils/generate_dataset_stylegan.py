@@ -92,7 +92,7 @@ def sample(opt):
         
     random.shuffle(class_index_keys)
     for key in tqdm(class_index_keys): 
-        class_dir_name = os.path.join(output_path, partition, class_index_keys)
+        class_dir_name = os.path.join(output_path, partition, class_index_keys[key])
         if os.path.isdir(class_dir_name):
             continue
         os.makedirs(class_dir_name, exist_ok=True)
