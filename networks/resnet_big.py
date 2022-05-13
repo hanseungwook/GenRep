@@ -181,7 +181,7 @@ class SupConResNet(nn.Module):
         else:
             raise NotImplementedError(
                 'head not supported: {}'.format(head))
-        self.online_clf = nn.Linear(feat_dim, 100)
+        self.online_clf = nn.Linear(dim_in, 100)
 
     def forward(self, x):
         feat = self.encoder(x)
