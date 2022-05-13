@@ -268,7 +268,7 @@ def train(train_loader, model, criterion, optimizer, epoch, opt, grad_update, cl
     top1 = AverageMeter()
     end = time.time()
 
-
+    clf_criterion = torch.nn.CrossEntropyLoss()
     print("Start train")
 
     # Size_dataset always should be 1.3M for imagenet1K and 130K for imagenet100
@@ -330,12 +330,14 @@ def train(train_loader, model, criterion, optimizer, epoch, opt, grad_update, cl
 
 
         if opt.encoding_type == 'contrastive':
-            features = model(images)
+            features, logits = model(images)
             features = features.view(bsz, 2, -1)
+            acc1, acc5 = accuracy(output, labels, topk=(1, 5))
+            top1.update(acc1[0], bsz)
             if opt.method == 'SupCon':
-                loss = criterion(features, labels)
+                loss = criterion(features, labels) + clf_criterion(logits, labels)
             elif opt.method == 'SimCLR':
-                loss = criterion(features)
+                loss = criterion(features) + clf_criterion(logits, labels)
             else:
                 raise ValueError('contrastive method not supported: {}'.
                                  format(opt.method))
@@ -362,7 +364,7 @@ def train(train_loader, model, criterion, optimizer, epoch, opt, grad_update, cl
 
         # print info
         if (idx + 1) % opt.print_freq == 0:
-            if opt.encoding_type == 'crossentropy':
+            if opt.encoding_type == 'crossentropy' or opt.encoding_type == 'contrastive':
                 print('Train: [{0}][{1}/{2}]\t'
                       'BT {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
                       'DT {data_time.val:.3f} ({data_time.avg:.3f})\t'

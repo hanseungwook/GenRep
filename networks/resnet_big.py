@@ -181,11 +181,14 @@ class SupConResNet(nn.Module):
         else:
             raise NotImplementedError(
                 'head not supported: {}'.format(head))
+        self.online_clf = nn.Linear(feat_dim, 100)
 
     def forward(self, x):
         feat = self.encoder(x)
+
+        logits = self.online_clf(feat.clone().detach())
         feat = F.normalize(self.head(feat), dim=1)
-        return feat
+        return feat, logits
 
 class SupInverterResNet(nn.Module):
     """backbone + z and y heads"""
