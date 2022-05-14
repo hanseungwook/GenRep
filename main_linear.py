@@ -70,7 +70,7 @@ def parse_option():
     parser.add_argument('-d', '--data_folder', type=str,
                         help='the folder of the dataset you want to evaluate')
 
-     opt = parser.parse_args()
+    opt = parser.parse_args()
 
     iterations = opt.lr_decay_epochs.split(',')
     opt.lr_decay_epochs = list([])
