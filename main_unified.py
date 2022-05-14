@@ -332,12 +332,12 @@ def train(train_loader, model, criterion, optimizer, epoch, opt, grad_update, cl
         if opt.encoding_type == 'contrastive':
             features, logits = model(images)
             features = features.view(bsz, 2, -1)
-            acc1, acc5 = accuracy(logits, labels, topk=(1, 5))
+            acc1, acc5 = accuracy(logits, labels.repeat(2), topk=(1, 5))
             top1.update(acc1[0], bsz)
             if opt.method == 'SupCon':
                 loss = criterion(features, labels) + clf_criterion(logits, labels)
             elif opt.method == 'SimCLR':
-                loss = criterion(features) + clf_criterion(logits, labels)
+                loss = criterion(features) + clf_criterion(logits, labels.repeat(2))
             else:
                 raise ValueError('contrastive method not supported: {}'.
                                  format(opt.method))
